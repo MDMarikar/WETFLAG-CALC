@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+
+  <title>WETFAG Check by D Marikar</title>
+
+  <style>
+
+
+    .fillcontainer { height: 100%; width: 100%; background: #FFCCFF; }
+  </style>
+
+
+
+
+
+
+   <script>
+
+   var MONTHS="Months";
+   var YEARS="Years";
+   var KG="Kg";
+
+
+   var SELECTED_UNIT = MONTHS;
+
+   var weightParam = 0;
+   var ageParam=0;
+
+   var FORMULA_MONTHS="(0.5 x months) + 4";
+   var FORMULA_1TO5="(2 x years) + 8";
+   var FORMULA_6TO12="(3 x years) + 7";
+   var OVER_12="Outside APLS age range";
+   var WEIGHT_13=44;
+   var CURRENT_FORMULA=null;
+   var wetfag;
+
+
+function calculateWetFag()
+  {
+
+     wetfag = new Object();
+     wetfag.etsize=null;
+     wetfag.etlength=null;
+     var x;
+
+     if (weightParam==WEIGHT_13)
+     {
+
+       wetfag.energy=150;
+       wetfag.etsize="7-8";
+       wetfag.fluids=1000;
+       wetfag.adrenaline=10;
+       wetfag.amiodarone=300;
+       wetfag.glucose=80;
+     }
+
+     else
+     {
+
+
+
+       wetfag.energy = 4 * weightParam;
+
+
+
+       if (SELECTED_UNIT==MONTHS)
+       {
+         if (ageParam <=12)
+           wetfag.etsize=3.5;
+         else
+           wetfag.etsize=ETsize(Math.floor(ageParam/12));
+
+
+       }
+       else if (SELECTED_UNIT == YEARS)
+       {
+         wetfag.etsize=ETsize(ageParam);
+
+       }
+
+        if (SELECTED_UNIT == YEARS || (SELECTED_UNIT==MONTHS && ageParam >=12))
+       {
+         if (SELECTED_UNIT==YEARS)
+           wetfag.etlength= ((ageParam/2)+12);
+         else
+         {
+           var years = Math.floor(ageParam/12);
+           wetfag.etlength= ((years/2)+12);
+         }
+
+       }
+
+
+
+
+
+       wetfag.fluids= weightParam*20;
+
+
+
+       var adrenaline = weightParam*0.1;
+       wetfag.adrenaline = adrenaline.toFixed(1);
+
+       wetfag.amiodarone = weightParam * 5;
+
+       wetfag.glucose= weightParam*2;
+
+
+
+
+
+
+
+     }
+
+     document.getElementById("energy").value=wetfag.energy+" J";
+     document.getElementById("tubesize").value=wetfag.etsize;
+     document.getElementById("tubelength").value=wetfag.etlength;
+
+     document.getElementById("fluids").value=(wetfag.fluids/2)+"-"+wetfag.fluids+
+" ml";
+     document.getElementById("adrenaline").value=wetfag.adrenaline + " ml";
+     document.getElementById("amiodarone").value=wetfag.amiodarone + "mg";
+     document.getElementById("glucose").value = wetfag.glucose + " ml";
+
+
+
+
+  }
+
+
+  function ETsize(years)
+  {
+    var etsize = (years/4)+4;
+    return etsize.toFixed(1);
+
+  }
+  function calculateWeight(val)
+  {
+    if (SELECTED_UNIT==MONTHS)
+    {
+       if (val <= 12)
+       {
+         return 0.5*val+4;
+       }
+       else
+       {
+         var yearsAge=Math.floor(val/12);
+         if (yearsAge < 6)
+         {
+            return ((2*yearsAge)+8);
+
+         }
+
+         else if (yearsAge< 13)
+         {
+           return ((3*yearsAge)+7);
+         }
+         else
+         {
+           return WEIGHT_13;
+
+         }
+
+
+       }
+     }
+     else
+     {
+
+         if (val< 6)
+         {
+           return ((2*val)+8);
+
+
+         }
+         else if (val < 13)
+         {
+           return ((3*val)+7);
+         }
+         else
+         {
+            return WEIGHT_13;
+
+         }
+
+     }
+
+
+  }
+
+
+
+   function unitsChanged(val)
+   {
+     SELECTED_UNIT = val.value;
+     document.getElementById("unitLab").value = SELECTED_UNIT;
+     resetCalc();
+
+
+
+   }
+
+   function resetCalc()
+   {
+
+
+
+     document.getElementById("inputVal").value=null;
+     resetFields();
+   }
+
+   function resetFields()
+   {
+     //reset everything else
+     weightParam=0;
+     ageParam=0;
+     document.getElementById("weightFormula").value=null;
+     document.getElementById("weightValue").value="Kg";
+     document.getElementById("energy").value="J";
+     document.getElementById("tubesize").value="mm";
+     document.getElementById("tubelength").value="cm";
+
+     document.getElementById("fluids").value="ml";
+     document.getElementById("adrenaline").value="ml";
+     document.getElementById("amiodarone").value="mg";
+     document.getElementById("glucose").value = "ml";
+
+
+   }
+
+
+   function valueEntered()
+   {
+
+     calculateWetfagOnAgeOrWeight();
+   }
+
+   function calculateWetfagOnAgeOrWeight()
+   {
+
+
+     if (SELECTED_UNIT==KG)
+     {
+
+
+         document.getElementById("weightFormula").value=null;
+         weightParam  = document.getElementById("inputVal").value;
+
+         if (isNaN(weightParam) || (weightParam <=0 ))
+         {
+           resetFields();
+           return;
+         }
+
+         document.getElementById("weightValue").value=null;
+         ageParam=0;
+          var formattedweight;
+
+          formattedweight = weightParam;
+
+          if (weightParam>=WEIGHT_13)
+          {
+            weightParam=WEIGHT_13;
+            formattedweight=weightParam;
+
+            formattedweight=">"+formattedweight;
+
+          }
+          formattedweight=formattedweight+KG;
+
+         document.getElementById("weightValue").value=formattedweight;
+          calculateWetFag();
+
+     }
+     else
+     {
+
+         ageParam  = document.getElementById("inputVal").value;
+
+         if (isNaN(ageParam) || (ageParam <=0 ))
+         {
+           resetFields();
+           return;
+         }
+
+
+          weightParam = calculateWeight(ageParam);
+          var formattedweight;
+
+          formattedweight = weightParam;
+          formattedweight = formattedweight+KG;
+          if (weightParam>=WEIGHT_13)
+          {
+            formattedweight=">"+formattedweight;
+
+          }
+         document.getElementById("weightValue").value=formattedweight;
+          calculateWetFag();
+
+
+       if (SELECTED_UNIT==MONTHS)
+       {
+
+
+
+           if (ageParam <= 12)
+           {
+               document.getElementById("weightFormula").value=FORMULA_MONTHS;
+               CURRENT_FORMULA=FORMULA_MONTHS;
+           }
+           else
+           {
+               var yearsAge=Math.floor(ageParam/12);
+               if (yearsAge< 6)
+               {
+                   document.getElementById("weightFormula").value=FORMULA_1TO5;
+                   CURRENT_FORMULA=FORMULA_1TO5;
+               }
+               else if (yearsAge< 13)
+               {
+                   document.getElementById("weightFormula").value=FORMULA_6TO12;
+                   CURRENT_FORMULA=FORMULA_6TO12;
+               }
+               else
+               {
+                   document.getElementById("weightFormula").value=OVER_12;
+                   CURRENT_FORMULA=OVER_13;
+               }
+
+           }
+
+
+       }
+       else if (SELECTED_UNIT==YEARS)
+       {
+
+             if (ageParam < 6)
+             {
+                 document.getElementById("weightFormula").value=FORMULA_1TO5;
+            }
+             else if (ageParam < 13)
+             {
+                 document.getElementById("weightFormula").value=FORMULA_6TO12;
+             }
+              else
+             {
+                 document.getElementById("weightFormula").value=OVER_12;
+           }
+
+       }
+
+
+     }
+    }
+
+   </script>
+
+
+ </head>
+ <body>
+
+<div class="fillcontainer">
+<div id="header" style="background-color:#CCCCFF">
+ <h2>WETFAG Check</h2>
+</div>
+
+
+
+
+   <h3>
+   <form oninput="valueEntered()">
+     <input type="number" id="inputVal" name="inputVal" min="1"
+max="99" maxlength=2 size=2>
+     <output id="unitLab" name="unitLab" for="units">Months</output>
+   </form>
+   <input type="radio" name="units" value="Months" checked="true"
+onclick="unitsChanged(this)"> Months
+   <input type="radio" name="units" value="Years"
+onclick="unitsChanged(this)"> Years
+   <input type="radio" name="units" value="Kg"
+onclick="unitsChanged(this)"> Kg <br>
+
+   </h3>
+
+
+
+<div id="input" style="background-color:#CCCCFF">
+
+<table border="1" cellspacing="0">
+    <tr>
+       <td><b>W</b>eight <br></td>
+       <td><output id="weightFormula" name="weightFormula"></output><br></td>
+       <td><output id="weightValue" name="weightValue">Kg</output>    <br></td>
+    </tr>
+    <tr>
+       <td><b>E</b>nergy <br></td>
+       <td>4J/kg <br></td>
+       <td><output id="energy" name="energy">J</output><br></td>
+    </tr>
+    <tr>
+       <td rowspan="2"><b>T</b>racheal tube<br></td>
+       <td>Size (age/4) + 4 <br></td>
+       <td><output id="tubesize" name="tubesize">mm</output></td>
+    </tr>
+    <tr>
+       <td>Length (age/2)+12<br></td>
+       <td><output id="tubelength" name="tubelength">cm</output></td>
+    </tr>
+    <tr>
+       <td><b>F</b>luids (saline)<br></td>
+       <td>10-20ml/kg<br></td>
+       <td><output id="fluids" name="fluids">ml</output></td>
+    </tr>
+    <tr>
+       <td><b>A</b>drenaline</td>
+       <td>0.1 ml/kg 1:10000<br>(10 micrograms/ml) <br></td>
+       <td><output id="adrenaline" name="adrenaline">ml</output></td>
+    </tr>
+    <tr>
+       <td><b>A</b>miodarone</td>
+       <td>5mg/kg</td>
+       <td><output id="amiodarone" name="amiodarone">mg</output></td>
+    </tr>
+    <tr>
+       <td><b>G</b>lucose</td>
+       <td>2ml/kg<br>(10% dextrose)<br></td>
+       <td><output id="glucose" name="glucose">ml</output><br></td>
+    </tr>
+</table>
+</div>
+</div>
+ </body>
+</html>
