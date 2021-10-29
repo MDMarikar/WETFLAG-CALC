@@ -1,27 +1,94 @@
-<!DOCTYPE html>
-<html lang="en">
- <head>
 
-  <title>WETFAG Check by D Marikar</title>
-
-  <style>
+<html manifest=cache.manifest>
 
 
-    .fillcontainer { height: 100%; width: 100%; background: #FFCCFF; }
-  </style>
+
+<head>
 
 
 
 
 
 
-   <script>
+ <!-- The name of the app on the home screen -->
+ <title>WETFLAG Checker v2</title>
+
+ <!-- Prevent scaling -->
+ <meta name="viewport" content="user-scalable=no, width=device-width" />
+
+ <!-- Eliminate url and button bars if added to home screen -->
+ <meta name="apple-mobile-web-app-capable" content="yes" />
+
+ <!-- Choose how to handle the phone status bar -->
+ <meta names="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+ <!-- Specify a 320x460 start-up image. -->
+ <link rel="apple-touch-startup-image" href="./startup2.png" />
+
+ <!-- Choose a 57x57 image for the icon -->
+ <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    
+<!-- Include jQuery Mobile stylesheets -->
+  <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+  <!-- Include the jQuery library -->
+  <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  <!-- Include the jQuery Mobile library -->
+  <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+  
+
+
+
+<link rel="stylesheet" href="/web/20130619025647cs_/http://www.paediatrictools.com/jquery.mobile-1.3.0.min.css" />
+<script src="/web/20130619025647js_/http://www.paediatrictools.com/jquery-1.9.1.min.js"></script>
+<script src="/web/20130619025647js_/http://www.paediatrictools.com/jquery.mobile-1.3.0.min.js"></script>
+<link rel="stylesheet" href="add2home.css">
+<script type="application/javascript" src="add2home.js"></script>
+
+<script>
+$(document).ready(function(){
+
+
+  $("input[type=radio]").click(function(){
+    unitsChanged($(this).val());
+  });
+
+
+
+  $("#inputVal").keyup(function(){
+    valueEntered();});
+
+
+
+});
+</script>
+
+ 
+
+ <style>
+
+
+</style>
+
+ <script>
+// To be called when there's a move event on the body itself:
+function BlockMove(event) {
+ // Tell Safari not to move the window.
+ event.preventDefault() ;
+}
+ </script>
+</head>
+
+<body>
+
+
+
+<script>
 
    var MONTHS="Months";
    var YEARS="Years";
    var KG="Kg";
 
-
+   
    var SELECTED_UNIT = MONTHS;
 
    var weightParam = 0;
@@ -36,6 +103,10 @@
    var wetfag;
 
 
+
+
+
+
 function calculateWetFag()
   {
 
@@ -46,7 +117,7 @@ function calculateWetFag()
 
      if (weightParam==WEIGHT_13)
      {
-
+       
        wetfag.energy=150;
        wetfag.etsize="7-8";
        wetfag.fluids=1000;
@@ -54,15 +125,15 @@ function calculateWetFag()
        wetfag.amiodarone=300;
        wetfag.glucose=80;
      }
-
+     
      else
      {
-
-
-
+       
+       
+       
        wetfag.energy = 4 * weightParam;
-
-
+       
+      
 
        if (SELECTED_UNIT==MONTHS)
        {
@@ -70,8 +141,8 @@ function calculateWetFag()
            wetfag.etsize=3.5;
          else
            wetfag.etsize=ETsize(Math.floor(ageParam/12));
-
-
+         
+        
        }
        else if (SELECTED_UNIT == YEARS)
        {
@@ -91,44 +162,43 @@ function calculateWetFag()
 
        }
 
+      
 
-
-
-
+   
+        
        wetfag.fluids= weightParam*20;
+       
 
-
-
+        
        var adrenaline = weightParam*0.1;
        wetfag.adrenaline = adrenaline.toFixed(1);
-
+       
        wetfag.amiodarone = weightParam * 5;
-
+       
        wetfag.glucose= weightParam*2;
+       
 
+      
 
-
-
-
-
+       
+       
 
      }
 
      document.getElementById("energy").value=wetfag.energy+" J";
-     document.getElementById("tubesize").value=wetfag.etsize;
+     document.getElementById("tubesize").value=wetfag.etsize; 
      document.getElementById("tubelength").value=wetfag.etlength;
-
-     document.getElementById("fluids").value=(wetfag.fluids/2)+"-"+wetfag.fluids+
-" ml";
-     document.getElementById("adrenaline").value=wetfag.adrenaline + " ml";
+       
+     document.getElementById("fluids").value=(wetfag.fluids/2)+"-"+wetfag.fluids+ " mL";
+     document.getElementById("adrenaline").value=wetfag.adrenaline + " mL";
      document.getElementById("amiodarone").value=wetfag.amiodarone + "mg";
-     document.getElementById("glucose").value = wetfag.glucose + " ml";
+     document.getElementById("glucose").value = wetfag.glucose + " mL";
 
-
+    
 
 
   }
-
+  
 
   function ETsize(years)
   {
@@ -155,15 +225,15 @@ function calculateWetFag()
 
          else if (yearsAge< 13)
          {
-           return ((3*yearsAge)+7);
+           return ((3*yearsAge)+7);  
          }
          else
          {
            return WEIGHT_13;
-
+           
          }
-
-
+          
+         
        }
      }
      else
@@ -177,38 +247,40 @@ function calculateWetFag()
          }
          else if (val < 13)
          {
-           return ((3*val)+7);
+           return ((3*val)+7);  
          }
          else
          {
             return WEIGHT_13;
-
+        
          }
 
      }
-
-
+         
+ 
   }
 
-
+   
 
    function unitsChanged(val)
    {
-     SELECTED_UNIT = val.value;
-     document.getElementById("unitLab").value = SELECTED_UNIT;
+     
+     
+     SELECTED_UNIT = val;
      resetCalc();
-
-
-
+     
+     
+     
    }
-
+   
    function resetCalc()
    {
 
-
-
+     
+     
      document.getElementById("inputVal").value=null;
      resetFields();
+     document.getElementById("inputVal").focus();
    }
 
    function resetFields()
@@ -219,47 +291,47 @@ function calculateWetFag()
      document.getElementById("weightFormula").value=null;
      document.getElementById("weightValue").value="Kg";
      document.getElementById("energy").value="J";
-     document.getElementById("tubesize").value="mm";
+     document.getElementById("tubesize").value="mm"; 
      document.getElementById("tubelength").value="cm";
-
-     document.getElementById("fluids").value="ml";
-     document.getElementById("adrenaline").value="ml";
+       
+     document.getElementById("fluids").value="mL";
+     document.getElementById("adrenaline").value="mL";
      document.getElementById("amiodarone").value="mg";
-     document.getElementById("glucose").value = "ml";
-
-
+     document.getElementById("glucose").value = "mL";
+     
+ 
    }
-
+   
 
    function valueEntered()
-   {
-
+   {  
+     
      calculateWetfagOnAgeOrWeight();
    }
 
    function calculateWetfagOnAgeOrWeight()
-   {
-
+   {  
+     
 
      if (SELECTED_UNIT==KG)
      {
-
-
+       
+         
          document.getElementById("weightFormula").value=null;
          weightParam  = document.getElementById("inputVal").value;
-
+         
          if (isNaN(weightParam) || (weightParam <=0 ))
          {
            resetFields();
            return;
          }
-
+         
          document.getElementById("weightValue").value=null;
          ageParam=0;
           var formattedweight;
-
+       
           formattedweight = weightParam;
-
+       
           if (weightParam>=WEIGHT_13)
           {
             weightParam=WEIGHT_13;
@@ -269,26 +341,26 @@ function calculateWetFag()
 
           }
           formattedweight=formattedweight+KG;
-
+        
          document.getElementById("weightValue").value=formattedweight;
           calculateWetFag();
-
+     
      }
      else
      {
-
+       
          ageParam  = document.getElementById("inputVal").value;
-
+         
          if (isNaN(ageParam) || (ageParam <=0 ))
          {
            resetFields();
            return;
          }
-
+                   
 
           weightParam = calculateWeight(ageParam);
           var formattedweight;
-
+       
           formattedweight = weightParam;
           formattedweight = formattedweight+KG;
           if (weightParam>=WEIGHT_13)
@@ -299,12 +371,12 @@ function calculateWetFag()
          document.getElementById("weightValue").value=formattedweight;
           calculateWetFag();
 
-
+     
        if (SELECTED_UNIT==MONTHS)
        {
-
-
-
+       
+       
+       
            if (ageParam <= 12)
            {
                document.getElementById("weightFormula").value=FORMULA_MONTHS;
@@ -330,12 +402,12 @@ function calculateWetFag()
                }
 
            }
-
-
+       
+ 
        }
        else if (SELECTED_UNIT==YEARS)
        {
-
+       
              if (ageParam < 6)
              {
                  document.getElementById("weightFormula").value=FORMULA_1TO5;
@@ -350,86 +422,100 @@ function calculateWetFag()
            }
 
        }
+        
+     
+     }  
+    } 
 
 
-     }
-    }
+  
+     
 
    </script>
+   
+   
+ 
+<div data-role="page">
 
-
- </head>
- <body>
-
-<div class="fillcontainer">
-<div id="header" style="background-color:#CCCCFF">
- <h2>WETFAG Check</h2>
+<div data-role="header">
+WETFLAG v2 by D
 </div>
 
+<div data-role="content">
+
+<fieldset data-role="controlgroup" data-type="horizontal" >
+
+<label><input checked="true" name="units"  type="radio" value="Months" /> Months</label>
+   <label><input name="units"  type="radio" value="Years" /> Years</label>
+   <label><input name="units"  type="radio" value="Kg" /> Kg </label>
 
 
 
-   <h3>
-   <form oninput="valueEntered()">
-     <input type="number" id="inputVal" name="inputVal" min="1"
-max="99" maxlength=2 size=2>
-     <output id="unitLab" name="unitLab" for="units">Months</output>
-   </form>
-   <input type="radio" name="units" value="Months" checked="true"
-onclick="unitsChanged(this)"> Months
-   <input type="radio" name="units" value="Years"
-onclick="unitsChanged(this)"> Years
-   <input type="radio" name="units" value="Kg"
-onclick="unitsChanged(this)"> Kg <br>
+</fieldset>
 
-   </h3>
+<input id="inputVal" max="99" maxlength="2" min="1" name="inputVal" size="2" type="number" autofocus />
 
 
 
-<div id="input" style="background-color:#CCCCFF">
+
+
+
+
+
 
 <table border="1" cellspacing="0">
-    <tr>
-       <td><b>W</b>eight <br></td>
-       <td><output id="weightFormula" name="weightFormula"></output><br></td>
-       <td><output id="weightValue" name="weightValue">Kg</output>    <br></td>
+    <tbody>
+<tr>
+       <td><b>W</b>eight </td>
+       <td><output id="weightFormula" name="weightFormula"></output><br /></td>
+       <td><output id="weightValue" name="weightValue">Kg</output>    </td>
     </tr>
-    <tr>
-       <td><b>E</b>nergy <br></td>
-       <td>4J/kg <br></td>
-       <td><output id="energy" name="energy">J</output><br></td>
+<tr>
+       <td><b>E</b>nergy </td>
+       <td>4J/kg </td>
+       <td><output id="energy" name="energy">J</output></td>
     </tr>
-    <tr>
-       <td rowspan="2"><b>T</b>racheal tube<br></td>
-       <td>Size (age/4) + 4 <br></td>
+<tr>
+       <td rowspan="2"><b>T</b>racheal tube</td>
+       <td>Size (age/4) + 4 </td>
        <td><output id="tubesize" name="tubesize">mm</output></td>
     </tr>
-    <tr>
-       <td>Length (age/2)+12<br></td>
+<tr>
+       <td>Length (age/2)+12</td>
        <td><output id="tubelength" name="tubelength">cm</output></td>
     </tr>
-    <tr>
-       <td><b>F</b>luids (saline)<br></td>
-       <td>10-20ml/kg<br></td>
-       <td><output id="fluids" name="fluids">ml</output></td>
+<tr>
+       <td><b>Fl</b>uids(0.9%NS)</td>
+       <td>10-20ml/kg</td>
+       <td><output id="fluids" name="fluids">mL</output></td>
     </tr>
-    <tr>
+<tr>
        <td><b>A</b>drenaline</td>
-       <td>0.1 ml/kg 1:10000<br>(10 micrograms/ml) <br></td>
-       <td><output id="adrenaline" name="adrenaline">ml</output></td>
+       <td>0.1 ml/kg 1:10000<br />
+(10 micrograms/kg) </td>
+       <td><output id="adrenaline" name="adrenaline">mL</output></td>
     </tr>
-    <tr>
+<tr>
        <td><b>A</b>miodarone</td>
        <td>5mg/kg</td>
        <td><output id="amiodarone" name="amiodarone">mg</output></td>
     </tr>
-    <tr>
+<tr>
        <td><b>G</b>lucose</td>
-       <td>2ml/kg<br>(10% dextrose)<br></td>
-       <td><output id="glucose" name="glucose">ml</output><br></td>
+       <td>2ml/kg<br />
+(10% glucose)</td>
+       <td><output id="glucose" name="glucose">mL</output></td>
     </tr>
-</table>
+</tbody></table>
+
+
 </div>
+
+<div data-role="footer"><A href="https://twitter.com/MDMarikar">Contact</a></div>
+
 </div>
- </body>
+
+
+</body>
+
 </html>
